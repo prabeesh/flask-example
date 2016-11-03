@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>Rate Card</title>
+</head>
+<body>
+<form action="/rate-card" method="POST">
+    <div>Select the origin <select type="text" name="origin">
+        {% for origin in origins %}
+        <option value="{{ origin }}" SELECTED> {{ origin }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <div>Select the destination <select type="text" name="dest">
+        {% for dest in dests %}
+        <option value="{{ dest}}" SELECTED> {{ dest }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <div>Select mode of transportation <select type="text" name="mode">
+        {% for mode in modes %}
+        <option value="{{ mode }}" SELECTED> {{ mode }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    Enter weight in Kg <input type="number" name="weight" required> </input>
+    </div>
+    <div>
+        <button type="submit" value="submit">Submit</button>
+    </div>
+</form>
+</body>
+</html>

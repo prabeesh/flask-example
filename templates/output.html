@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>Rate Card</title>
+</head>
+<body>
+<form action="/rate-card">
+    {% if output is not none%}
+    <p> The rate card for {{ data.weight|safe }} Kg from {{ data.origin|safe }} to {{ data.dest|safe }} is </p>
+    <p>Pre-Carriage Charge is {{ rate.pre }} USD </p>
+    <p>On-Carriage Charge is {{ rate.on }} AED </p>
+    <p>Total Charge is {{ rate.total }} USD </p>
+    {% else %}
+    Sorry there is no rate card available for {{ data.origin }}
+    {% endif %}
+    <button type="submit" value="Check another">Check another</button>
+</form>
+
+<form action="/logout">
+    <button type="submit" value="Logout">Logout</button>
+</form>
+
+</body>
+</html>
