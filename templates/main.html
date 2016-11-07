@@ -4,7 +4,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
     <meta charset="UTF-8">
-    <title>Rate Card</title>
+    {% include 'menu.html' %}
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
 <form action="/rate-card" method="POST">
@@ -29,7 +31,7 @@
     Enter weight in Kg <input type="number" name="weight" required> </input>
     </div>
     </div>
-    Enter percentage increase <input type="number" name="percentage" optional> </input>
+    Enter percentage increase (optional)<input type="number" name="percentage" optional> </input>
     </div>
     <div>
         <button type="submit" value="submit">Submit</button>

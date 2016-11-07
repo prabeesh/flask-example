@@ -7,9 +7,9 @@
     <title>Rate Card</title>
 </head>
 <body>
-<form action="/">
+<form action="{{ url_for('login')}}">
     <h2 style="text-align: center;">{{ message }}</h2>
-    <button type="submit" value="Home">Go to Log in Page</button>
+    <button type="submit" value="Home">{{ display }}</button>
 </form>
 </body>
 </html>

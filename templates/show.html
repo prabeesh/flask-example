@@ -1,0 +1,10 @@
+<!doctype html>
+{% block body %}
+  <ul class=entries>
+  {% for entry in entries %}
+    <li>{{ entry.origin }} {{entry.dest|safe}} {{entry.mode|safe}} {{entry.weight|safe}} {{ entry.currency }} {{ entry.pre }} {{ entry.on }} {{ entry.total }} {{ entry.percantage }}
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

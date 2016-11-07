@@ -22,7 +22,7 @@ def tennesse_pennysylvania(weight, percentage=None):
 
     total = weight * final_rate + fsc + sec + pick_up + transfer + export_formalities
 
-    return total
+    return total, rate, final_rate
 
 
 def hong_kong(weight, percentage=None):
@@ -47,7 +47,7 @@ def hong_kong(weight, percentage=None):
 
     total = weight * final_rate + airline_handling + terminal_handling + cartage + pick_up
 
-    return total
+    return total, rate, final_rate
 
 
 def london(weight, percentage=None):
@@ -69,7 +69,7 @@ def london(weight, percentage=None):
 
     total = weight * final_rate + pick_up
 
-    return total
+    return total, rate, final_rate
 
 
 def uk(weight, area, percentage=None):
@@ -101,7 +101,7 @@ def uk(weight, area, percentage=None):
     pre_total = max(60, weight * final_rate)
     total = (pre_total + pick_up) * 1.23  # converting GBP to USD
 
-    return total
+    return total, rate, final_rate
 
 
 def new_york(weight, percentage=None):
@@ -121,7 +121,7 @@ def new_york(weight, percentage=None):
 
     total = weight * final_rate
 
-    return total
+    return total, rate, final_rate
 
 
 # all values in AED

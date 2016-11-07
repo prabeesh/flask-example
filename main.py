@@ -48,6 +48,41 @@ class User(db.Model):
         return False
 
 
+class Result(db.Model):
+
+    __tablename__ = 'results'
+
+    #id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, primary_key=True)
+    origin = db.Column(db.String, primary_key=True)
+    dest = db.Column(db.String, primary_key=True)
+    mode = db.Column(db.String, primary_key=True)
+    weight = db.Column(db.String, primary_key=True)
+    pre = db.Column(db.Float)
+    on = db.Column(db.Float)
+    total = db.Column(db.Float)
+    percentage = db.Column(db.Integer, primary_key=True)
+    original_rate = db.Column(db.Integer)
+    rate_per_kg = db.Column(db.Integer)
+
+    def __init__(self, user_id, origin, dest, weight, pre, on, total, percentage, mode, original_rate, rate_per_kg):
+        self.user_id = user_id
+        self.origin = origin
+        self.dest = dest
+        self.weight = weight
+        self.pre = pre
+        self.on = on
+        self.total = total
+        self.percentage = percentage
+        self.mode = mode
+        self.original_rate = original_rate
+        self.rate_per_kg = rate_per_kg
+        self.id = self.__dict__
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+
 @login_manager.user_loader
 def user_loader(user_id):
     return User.query.get(user_id)
@@ -71,7 +106,7 @@ def user_loader(user_id):
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
-    return render_template('info.html', message='Unauthorized')
+    return render_template('info.html', message='Unauthorized', display='Go to Login')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -95,7 +130,7 @@ def login():
             flask_login.login_user(user)
             return redirect(url_for('rate_card'))
 
-    return render_template('info.html', message='bad log in')
+    return render_template('info.html', message='bad log in', display='Go to Login')
 
 
 @app.route('/logout')
@@ -107,7 +142,7 @@ def logout():
     db.session.add(user)
     db.session.commit()
     flask_login.logout_user()
-    return render_template('info.html', message='successfully log out')
+    return render_template('info.html', message='successfully log out', display='Go to Log in')
 
 
 @app.route('/rate-card', methods=['GET', 'POST'])
@@ -125,7 +160,7 @@ def rate_card():
                    'United Kingdom Area 5',
                    ]
         dests = ['Dubai']
-        modes = ['airfreight', 'seafreight']
+        modes = ['Sea Freight', 'Air Freight']
         return render_template('main.html', origins=origins, dests=dests, modes=modes)
 
     if request.method == 'POST':
@@ -157,12 +192,44 @@ def rate_card():
             on_charge = rc.dubai(weight)
 
         rate = {
-                'pre': pre_charge,
-                'on': on_charge,
-                'total': pre_charge + on_charge * 0.27  # converting AED to USD
+                'pre': round(pre_charge[0], 2),
+                'on': round(on_charge, 2),
+                'total': round(pre_charge[0] + on_charge * 0.27, 2)  # converting AED to USD
         }
 
+        user_id = flask_login.current_user.get_id()
+        rate.update(data)
+        rate.update({'user_id': user_id})
+        rate.update({'original_rate': round(pre_charge[1], 2), 'rate_per_kg': round(pre_charge[2], 2)})
+        result = Result(**rate)
+
+        db.session.merge(result)
+        db.session.commit()
+
         return render_template('output.html', data=data, rate=rate)
+
+
+@app.route('/history', methods=['GET', 'POST'])
+@flask_login.login_required
+def history():
+    if request.method == 'GET':
+        current_user = flask_login.current_user.get_id()
+        entries = db.session.query(Result).filter(Result.user_id == current_user)
+        return render_template('table.html', entries=entries)
+
+    if request.method == 'POST':
+        current_user = flask_login.current_user.get_id()
+        Result.query.filter(Result.user_id == current_user).delete()
+        db.session.commit()
+        return render_template('info.html', message='cleared all the history', display='Home')
+
+
+@app.route('/precalc')
+@flask_login.login_required
+def pre_calc():
+    if request.method == 'GET':
+        entries = db.session.query(Result).filter(Result.user_id == 'precalc')
+        return render_template('table.html', entries=entries)
 
 
 if __name__ == '__main__':

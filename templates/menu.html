@@ -1,0 +1,13 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+    <title>Rate Card</title>
+</head>
+<div>
+    <ul class="topnav" id="myTopnav">
+        <li><a href="{{ url_for('rate_card') }}">Home</a></li>
+        <li><a href="{{ url_for('history') }}">History</a></li>
+        <li><a href="{{ url_for('pre_calc') }}">Pre Calculated</a></li>
+        <li align="right"><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</div>
