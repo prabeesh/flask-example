@@ -52,7 +52,6 @@ class Result(db.Model):
 
     __tablename__ = 'results'
 
-    #id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, primary_key=True)
     origin = db.Column(db.String, primary_key=True)
     dest = db.Column(db.String, primary_key=True)
@@ -86,22 +85,6 @@ class Result(db.Model):
 @login_manager.user_loader
 def user_loader(user_id):
     return User.query.get(user_id)
-
-
-# @login_manager.request_loader
-# def request_loader(request):
-#     email = request.form.get('email')
-#     if email not in users:
-#         return
-#
-#     user = User()
-#     user.id = email
-#
-#     # DO NOT ever store passwords in plaintext and always compare password
-#     # hashes using constant-time comparison!
-#     user.is_authenticated = request.form['pw'] == users[email]['pw']
-#
-#     return user
 
 
 @login_manager.unauthorized_handler

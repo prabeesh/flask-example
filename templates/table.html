@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://code.jquery.com/jquery-1.12.3.js"></script>
-<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-<link href='https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-1.12.3.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <link href='https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
     {% include 'menu.html' %}
     {% block head %}
     {% endblock %}
@@ -21,16 +21,16 @@
             <tr>
                 <th>Origin</th>
                 <th>Destination</th>
-                <th>Weight</th>
+                <th>Weight(KG)</th>
                 <th>Mode of Transportation</th>
-                <th>Rate per KG</th>
+                <th>Sell Rate per KG</th>
                 {% if not request.path == url_for('pre_calc') %}
-                    <th>Original Rate</th>
-                    <th>Percentage</th>
+                    <th>Buy Rate per KG</th>
+                    <th>Percentage Increase (%)</th>
                 {% endif %}
-                <th>Pre Carriage Charge USD</th>
-                <th>On Carriage Charge AED</th>
-                <th>Total USD</th>
+                <th>Pre Carriage Charge (USD)</th>
+                <th>On Carriage Charge (AED)</th>
+                <th>Total Charge (USD)</th>
             </tr>
         </thead>
         <tbody>
@@ -54,7 +54,7 @@
     </table>
 <div>
     {% if not request.path == url_for('pre_calc') %}
-    <form action="/history" method="POST">
+    <form action="{{ url_for('history') }}" method="POST">
         <h2 style="text-align: center;">{{ message }}</h2>
         <button type="submit" onclick="return confirm('Are you sure?')" >Clear All History</button>
     </form>

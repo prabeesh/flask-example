@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
-    <meta charset="UTF-8">
     {% include 'menu.html' %}
     {% block head %}
     {% endblock %}
 </head>
 <body>
-<form action="/rate-card" method="POST">
+<form action="{{ url_for('rate_card')}}" method="POST">
     <div>Select the origin <select type="text" name="origin">
         {% for origin in origins %}
         <option value="{{ origin }}" SELECTED> {{ origin }}</option>
