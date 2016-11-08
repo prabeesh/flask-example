@@ -41,8 +41,8 @@
                 <td>{{ entry.weight }}</td>
                 <td>{{ entry.mode }}</td>
                 <td>{{ entry.rate_per_kg }}</td>
-                <td>{{ entry.original_rate }}</td>
                 {% if not request.path == url_for('pre_calc') %}
+                    <td>{{ entry.original_rate }}</td>
                     <td>{{ entry.percentage }}</td>
                 {% endif %}
                 <td>{{ entry.pre }}</td>

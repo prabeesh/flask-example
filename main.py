@@ -76,10 +76,6 @@ class Result(db.Model):
         self.mode = mode
         self.original_rate = original_rate
         self.rate_per_kg = rate_per_kg
-        self.id = self.__dict__
-
-    def __repr__(self):
-        return '<id {}>'.format(self.id)
 
 
 @login_manager.user_loader
