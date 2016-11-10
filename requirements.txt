@@ -4,3 +4,5 @@ Flask-Login==0.4.0
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.13.1
 gunicorn==19.6.0
+mysqlclient
+pymysql

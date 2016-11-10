@@ -4,3 +4,9 @@ entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
     python_version: 3
+
+beta_settings:
+    cloud_sql_instances: "rate-card-148210:asia-east1:dbinstance"
+
+env_variables:
+    GAE_APPENGINE_PROD: True

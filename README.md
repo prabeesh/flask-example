@@ -11,3 +11,5 @@ user1 = User('username', pw1)
 
 db.session.add(user1)
 db.session.commit()
+
+to use google cloud SQL in google app engine enable Google Cloud SQL API and create key for app engine

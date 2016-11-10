@@ -5,16 +5,22 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 import flask_login
+import os
 
 import rate_calculator as rc
 
 app = Flask(__name__)
-app.secret_key = 'qwdghky12346h'
+app.secret_key = '2k0ymeL4BDJ5eA7p78C8Y0Vz8kz3owpA'
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+if os.environ.get('GAE_APPENGINE_PROD'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root123@localhost/ratecard?unix_socket=/cloudsql/rate-card-148210:asia-east1:dbinstance'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root123@127.0.0.1:3306/ratecard'
+
+# Disable track modifications, as it unnecessarily uses memory.
+app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -23,8 +29,8 @@ class User(db.Model):
 
     __tablename__ = 'user'
 
-    username = db.Column(db.String, primary_key=True)
-    password = db.Column(db.String)
+    username = db.Column(db.String(20), primary_key=True)
+    password = db.Column(db.String(80))
     authenticated = db.Column(db.Boolean, default=False)
 
     def __init__(self, username, password):
@@ -52,17 +58,17 @@ class Result(db.Model):
 
     __tablename__ = 'results'
 
-    user_id = db.Column(db.String, primary_key=True)
-    origin = db.Column(db.String, primary_key=True)
-    dest = db.Column(db.String, primary_key=True)
-    mode = db.Column(db.String, primary_key=True)
-    weight = db.Column(db.String, primary_key=True)
+    user_id = db.Column(db.String(20), primary_key=True)
+    origin = db.Column(db.String(120), primary_key=True)
+    dest = db.Column(db.String(120), primary_key=True)
+    mode = db.Column(db.String(20), primary_key=True)
+    weight = db.Column(db.Float, primary_key=True)
     pre = db.Column(db.Float)
     on = db.Column(db.Float)
     total = db.Column(db.Float)
-    percentage = db.Column(db.Integer, primary_key=True)
-    original_rate = db.Column(db.Integer)
-    rate_per_kg = db.Column(db.Integer)
+    percentage = db.Column(db.Float, primary_key=True)
+    original_rate = db.Column(db.Float)
+    rate_per_kg = db.Column(db.Float)
 
     def __init__(self, user_id, origin, dest, weight, pre, on, total, percentage, mode, original_rate, rate_per_kg):
         self.user_id = user_id
@@ -144,8 +150,8 @@ def rate_card():
 
     if request.method == 'POST':
         origin = request.form.get('origin')
-        weight = request.form.get('weight', type=int)
-        percentage = request.form.get('percentage', type=int)
+        weight = request.form.get('weight', type=float)
+        percentage = request.form.get('percentage', type=float)
 
         data = request.form.to_dict()
 
@@ -179,6 +185,8 @@ def rate_card():
         user_id = flask_login.current_user.get_id()
         rate.update(data)
         rate.update({'user_id': user_id})
+        if not percentage:
+            rate.update({'percentage': 0})
         rate.update({'original_rate': round(pre_charge[1], 2), 'rate_per_kg': round(pre_charge[2], 2)})
         result = Result(**rate)
 
